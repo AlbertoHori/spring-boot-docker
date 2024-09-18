@@ -1,0 +1,21 @@
+FROM registry.access.redhat.com/ubi8/ubi:latest
+RUN yum update -y && \
+    yum install -y logrotate && \
+    yum clean all
+
+# Create a logrotate config file
+RUN echo "/opt/apache/base/logs/* { \n\
+    daily \n\
+    size 300M \n\
+    missingok \n\
+    rotate 5 \n\
+    compress \n\
+    delaycompress \n\
+    notifempty \n\
+    create \n\
+}" > /etc/logrotate.d/logrotate.conf
+
+RUN touch /etc/logrotate.status
+
+# Update CMD to use the custom status file
+CMD while true; do logrotate -s /etc/logrotate.status /etc/logrotate.d/logrotate.conf; sleep 86400; done
