@@ -4,7 +4,7 @@ RUN yum update -y && \
     yum clean all
 
 # Create a logrotate config file
-RUN echo "/opt/apache/base/logs/* { \n\
+RUN echo "\"/opt/apache/tomcat/base/logs/*.*\" { \n\
     daily \n\
     size 300M \n\
     missingok \n\
@@ -15,7 +15,9 @@ RUN echo "/opt/apache/base/logs/* { \n\
     create \n\
 }" > /etc/logrotate.d/logrotate.conf
 
+
 RUN touch /etc/logrotate.status
+RUN chmod 666 /etc/logrotate.status
 
 # Update CMD to use the custom status file
 CMD while true; do logrotate -s /etc/logrotate.status /etc/logrotate.d/logrotate.conf; sleep 86400; done
