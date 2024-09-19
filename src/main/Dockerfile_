@@ -3,14 +3,14 @@ RUN yum update -y && \
     yum install -y logrotate && \
     yum clean all
 
+RUN mkdir -p /etc/logrotate.d
+RUN mkdir -p /etc/logrotate
+RUN chmod 755 /etc/logrotate
+
 # Create a logrotate config file
-RUN echo "/opt/apache/tomcat/base/logs/*.* {daily size 300M missingok rotate 5 compress delaycompress notifempty create 0777 \n\
-    }"> /etc/logrotate.d/logrotate.conf
+RUN echo "/opt/apache/tomcat/base/logs/* {daily size 300M missingok rotate 5 compress delaycompress notifempty create}"> /etc/logrotate.d/logrotate.conf
 
 
-RUN touch /etc/logrotate.status
-RUN chmod 777 /etc
-RUN touch /etc/logrotate.status.tmp
 
 # Update CMD to use the custom status file
-CMD while true; do logrotate -s /etc/logrotate.status /etc/logrotate.d/logrotate.conf; sleep 86400; done
+CMD while true; do logrotate -s /etc/logrotate/logrotate.status /etc/logrotate.d/logrotate.conf; sleep 86400; done
