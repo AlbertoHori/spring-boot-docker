@@ -4,16 +4,7 @@ RUN yum update -y && \
     yum clean all
 
 # Create a logrotate config file
-RUN echo "\"/opt/apache/tomcat/base/logs/*.*\" { \n\
-    daily \n\
-    size 300M \n\
-    missingok \n\
-    rotate 5 \n\
-    compress \n\
-    delaycompress \n\
-    notifempty \n\
-    create \n\
-}" > /etc/logrotate.d/logrotate.conf
+RUN echo "/opt/apache/tomcat/base/logs/*.* {daily size 300M missingok rotate 5 compress delaycompress notifempty create}"> /etc/logrotate.d/logrotate.conf
 
 
 RUN touch /etc/logrotate.status
